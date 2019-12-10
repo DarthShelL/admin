@@ -1,0 +1,95 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    margin: 0;
+}
+
+.admin-panel {
+    /*flex: 1;*/
+    min-height: 100vh;
+    max-width: 250px;
+    background-color: #1b2d37;
+}
+
+.admin-content {
+    flex: 2;
+    background-color: #eeeeee;
+}
+
+/* LIST */
+.admin-panel ul.dsa-menu,
+.admin-panel ul.dsa-sub-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.admin-panel ul.dsa-menu li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.admin-panel ul.dsa-menu li ul.dsa-sub-menu {
+    max-height: 0;
+    height: 0px;
+    overflow: hidden;
+    transition: height 0.5s ease-in;
+}
+
+.admin-panel ul.dsa-menu li.active ul.dsa-sub-menu {
+    max-height: max-content;
+    height: 1000px;
+}
+
+.admin-panel ul.dsa-menu li ul.dsa-sub-menu li {
+
+}
+
+ul.dsa-menu .dsa-item {
+    line-height: 18px;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 0 17px;
+    color: #102103;
+    cursor: pointer;
+    display: block;
+    background-color: #fefefe;
+    box-sizing: border-box;
+    border-bottom: 1px solid grey;
+    border-top: 1px solid white;
+    border-left: 1px solid #dedede;
+    border-right: 1px solid #cecece;
+    text-decoration: none;
+}
+
+ul.dsa-menu .dsa-item:hover {
+    background-color: #fff;
+    color: #202204;
+}
+
+ul.dsa-sub-menu .dsa-item:hover {
+    background-color: #eee;
+    /*box-shadow: inset 0px -10px 16px -9px #295f76;*/
+}
+
+ul.dsa-sub-menu .dsa-item {
+    line-height: 16px;
+    font-size: 12px;
+    padding: 0 17px 0 34px;
+    color: #102103;
+    background-color: #d5d5d5;
+    border: none;
+    border-bottom: 1px solid grey;
+    border-right: 1px solid #cecece;
+    border-collapse: collapse;
+    /*box-shadow: inset 0px 0px 22px -9px #295f76;*/
+}
+
+.container {
+    border: 1px solid #cecece;
+    border-radius: 2px;
+    margin: 17px 17px 0px 17px;
+    background-color: #fefefe;
+    padding: 17px;
+}

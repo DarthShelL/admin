@@ -1,0 +1,25 @@
+{
+    "name": "darthshell/admin",
+    "description": "Admin tools for laravel",
+    "authors": [
+        {
+            "name": "Vladimir Shelestov aka DarthShelL",
+            "email": "shellnosferatu@gmail.com"
+        }
+    ],
+    "license": "GPL-3.0+",
+    "minimum-stability": "dev",
+    "require": {},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "DarthShelL\\Admin\\AdminServiceProvider"
+            ]
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "DarthShelL\\Admin\\": "src/"
+        }
+    }
+}
