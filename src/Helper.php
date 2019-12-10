@@ -15,4 +15,23 @@ class Helper
         }
         return static::$menu_handler;
     }
+
+    public static function getControllers(): array
+    {
+        $controllers = [];
+        self::getFilesFromDir(base_path('app/Http/Controllers'), $controllers);
+
+        return $controllers;
+    }
+
+    public static function getFilesFromDir($dir, &$files)
+    {
+        foreach (scandir($dir) as $file) {
+            if (!is_dir("{$dir}/{$file}")) {
+                $files[] = basename($file);
+            } elseif ($file !== '.' && $file !== '..') {
+                self::getFilesFromDir("{$dir}/{$file}", $files);
+            }
+        }
+    }
 }

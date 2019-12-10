@@ -24,6 +24,7 @@
     {!! DarthShelL\Admin\Helper::getMenu()->render() !!}
 </div>
 <div class="admin-content">
+    {{ dd(DarthShelL\Admin\Helper::getControllers()) }}
     @yield('content')
 </div>
 </body>
