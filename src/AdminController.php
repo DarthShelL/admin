@@ -23,9 +23,9 @@ class AdminController extends Controller
         $provider->addFilter('id', $provider::INTEGER);
         $provider->addFilter('label', $provider::STRING);
 
-        $provider->addFormat('type', function($row) {
+        $provider->addFormat('controller', function($row) {
             $types = [
-                0 => 'span',
+                0 => 'dropdown',
                 1 => 'link'
             ];
             return $types[$row->type];

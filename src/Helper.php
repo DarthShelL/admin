@@ -21,21 +21,15 @@ class Helper
         $controllers = [];
         self::getClassesFromDir(base_path('app/Http/Controllers'), $controllers);
 
-//        $meth = [];
-//        foreach ($controllers as $controller) {
-//            $meth[$controller] = get_class_methods($controller);
-//        }
-//        dd($meth);
-//        dd(get_class_methods(self::extractClassName(base_path('app/Http/Controllers') . '/Auth/ForgotPasswordController.php')));
-
         return $controllers;
     }
 
-    public static function getActionsByController($controller)
+    public static function getActionsByController($controller): array
     {
+        return get_class_methods($controller);
     }
 
-    public static function extractClassName($file)
+    public static function extractClassName($file): string
     {
         $fp = fopen($file, 'r');
         $class = $namespace = $buffer = '';
