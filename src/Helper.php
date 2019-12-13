@@ -63,6 +63,8 @@ class Helper
             }
         }
 
+        fclose($fp);
+
         return $namespace . '\\' . $class;
     }
 

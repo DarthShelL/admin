@@ -20,7 +20,7 @@ class CreateAdminItemsTable extends Migration
             $table->tinyInteger('type');
             $table->enum('method', ['get', 'post', 'put', 'delete', 'options', 'patch'])->nullable();
             $table->string('route')->nullable();
-            $table->string('controller', 40);
+            $table->string('controller');
             $table->string('action', 40);
             $table->tinyInteger('visible')->default(1);
             $table->timestamps();
