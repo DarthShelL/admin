@@ -71,11 +71,42 @@ class Helper
     public static function getClassesFromDir($dir, &$classes)
     {
         foreach (scandir($dir) as $file) {
-            if (!is_dir("{$dir}/{$file}")) {
-                $classes[] = self::extractClassName("{$dir}/{$file}");
+            $path = "{$dir}/{$file}";
+            if (!is_dir($path)) {
+                if (self::extendsClass($path, 'Controller')) {
+                    $classes[] = self::extractClassName($path);
+                }
             } elseif ($file !== '.' && $file !== '..') {
-                self::getClassesFromDir("{$dir}/{$file}", $classes);
+                self::getClassesFromDir($path, $classes);
             }
         }
     }
+
+    public static function extendsClass(string $file, string $ext_name): bool
+    {
+        $extends = $buffer = '';
+        $fh = fopen($file, 'r');
+
+        while (!$extends) {
+            if (feof($fh)) break;
+
+            $buffer = fread($fh, 512);
+
+            if (strpos($buffer, '{') === false) continue;
+
+            $tokens = token_get_all($buffer);
+
+
+            for ($i = 0; $i < count($tokens); $i++) {
+                if ($tokens[$i][0] === T_EXTENDS) {
+                    $extends = $tokens[$i + 2];
+                    if ($extends[1] == $ext_name) return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+
 }
