@@ -65,7 +65,7 @@ class AdminController extends Controller
         $provider->enableInlineEditing('route', DataProvider::INTEGER);
 
         $data = [];
-        $data = ['DarthShelL\Admin\AdminController' => 'DarthShelL\Admin\AdminController'];
+//        $data = ['DarthShelL\Admin\AdminController' => 'DarthShelL\Admin\AdminController'];
         $controllers = Helper::getControllers();
         foreach ($controllers as $controller) {
             $data[$controller] = $controller;

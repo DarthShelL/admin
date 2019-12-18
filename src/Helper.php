@@ -19,7 +19,7 @@ class Helper
     public static function getControllers(): array
     {
         $controllers = [];
-        self::getClassesFromDir(base_path('app/Http/Controllers'), $controllers);
+        self::getClassesFromDir(base_path(), $controllers);
 
         return $controllers;
     }
@@ -70,9 +70,10 @@ class Helper
 
     public static function getClassesFromDir($dir, &$classes)
     {
+        if (!is_dir($dir)) return;
         foreach (scandir($dir) as $file) {
             $path = "{$dir}/{$file}";
-            if (!is_dir($path)) {
+            if (!is_dir($path) && strpos($path, '.php')) {
                 if (self::extendsClass($path, 'Controller')) {
                     $classes[] = self::extractClassName($path);
                 }
@@ -100,11 +101,16 @@ class Helper
             for ($i = 0; $i < count($tokens); $i++) {
                 if ($tokens[$i][0] === T_EXTENDS) {
                     $extends = $tokens[$i + 2];
-                    if ($extends[1] == $ext_name) return true;
+
+                    if (isset($extends[1]) && $extends[1] == $ext_name) {
+                        fclose($fh);
+                        return true;
+                    }
                 }
             }
         }
 
+        fclose($fh);
         return false;
     }
 
