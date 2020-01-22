@@ -20,7 +20,7 @@ class DefaultRouteInsert extends Migration
                 'parent' => null,
                 'type' => 0,
                 'method' => 'get',
-                'route' => 'admin/index',
+                'route' => '/admin/index',
                 'controller' => 'DarthShelL\Admin\AdminController',
                 'action' => 'index',
                 'visible' => 1
