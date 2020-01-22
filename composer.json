@@ -9,7 +9,9 @@
     ],
     "license": "GPL-3.0+",
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+        "darthshell/grid": "^1.1.*"
+    },
     "extra": {
         "laravel": {
             "providers": [
