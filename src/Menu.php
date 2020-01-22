@@ -30,7 +30,9 @@ class Menu
                     'model' => $item,
                     'sub_items' => []
                 ];
-                $this->menu_list[] = (object)$obj;
+                if ($item->visible == 1) {
+                    $this->menu_list[] = (object)$obj;
+                }
             }
         }
 
@@ -38,7 +40,9 @@ class Menu
         foreach ($this->menu_list as $item) {
             foreach ($this->items as $sub_item) {
                 if ($item->model->id == $sub_item->parent) {
-                    $item->sub_items[] = (object)['model' => $sub_item];
+                    if ($sub_item->visible == 1) {
+                        $item->sub_items[] = (object)['model' => $sub_item];
+                    }
                 }
             }
         }
