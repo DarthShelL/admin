@@ -4,6 +4,8 @@
 namespace DarthShelL\Admin;
 
 
+use Illuminate\Support\Facades\Route;
+
 class Menu
 {
     public static $ITEM_SPAN = 0;
@@ -67,13 +69,21 @@ class Menu
 
     private function renderItem(object $item): string
     {
+        $current_uri = Route::current()->uri;
+
         switch ($item->model->type) {
             case self::$ITEM_SPAN:
                 $_item = [
-                    'name' => $item->model->label
+                    'name' => $item->model->label,
+                    'active' => false
                 ];
 
                 if (isset($item->sub_items) && count($item->sub_items) > 0) {
+                    foreach ($item->sub_items as $sub) {
+                        if ($sub->model->route == '/' . $current_uri) {
+                            $_item['active'] = true;
+                        }
+                    }
                     $_item['sub_menu'] = $this->renderSubMenu($item->sub_items);
                 }
 
@@ -82,12 +92,9 @@ class Menu
             case self::$ITEM_LINK:
                 $_item = [
                     'name' => $item->model->label,
-                    'href' => $item->model->route
+                    'href' => $item->model->route,
+                    'active' => $item->model->route == '/' . $current_uri ? true : false
                 ];
-
-                if (isset($item->sub_items) && count($item->sub_items) > 0) {
-                    $_item['sub_menu'] = $this->renderSubMenu($item->sub_items);
-                }
 
                 return view(self::$templates[self::$ITEM_LINK], $_item)->render();
                 break;
