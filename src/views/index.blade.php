@@ -10,5 +10,6 @@
 
     <div class="container">
         {!! $provider->renderGrid() !!}
+        <i class="far fa-edit"></i>
     </div>
 @endsection

@@ -18,6 +18,8 @@ class AdminController extends Controller
             'id' => 'ID'
         ]);
 
+        $provider->addActionsColumn();
+
         $provider->hideColumn('created_at', 'updated_at');
         $provider->addFilter('id', DataProvider::INTEGER);
         $provider->addFilter('label', DataProvider::STRING);
@@ -65,7 +67,7 @@ class AdminController extends Controller
         $provider->enableInlineEditing('route', DataProvider::INTEGER);
 
         $data = [];
-//        $data = ['DarthShelL\Admin\AdminController' => 'DarthShelL\Admin\AdminController'];
+
         $controllers = Helper::getControllers();
         foreach ($controllers as $controller) {
             $data[$controller] = $controller;
