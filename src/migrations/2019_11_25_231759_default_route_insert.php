@@ -17,13 +17,11 @@ class DefaultRouteInsert extends Migration
         DB::table('admin_items')->insert([
             [
                 'label' => 'dashboard',
-                'parent' => null,
                 'type' => 0,
                 'method' => 'get',
-                'route' => '/admin/index',
+                'route' => 'admin/index',
                 'controller' => 'DarthShelL\Admin\AdminController',
-                'action' => 'index',
-                'visible' => 1
+                'action' => 'index'
             ]
         ]);
     }

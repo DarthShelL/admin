@@ -45,17 +45,19 @@ class AdminServiceProvider extends ServiceProvider
 
     private function makeRoutes()
     {
-
-//        $console = new ConsoleOutput();
-
         if (Schema::hasTable('admin_items')) {
             $admin_items = AdminItem::all();
 
-            #TODO: check if route exists
-
             foreach ($admin_items as $item) {
-                if (method_exists(new $item->controller,$item->action)) {
-                    Route::{$item->method}($item->route, "{$item->controller}@{$item->action}");
+                if (Helper::routeURIExists($item->route))
+                    continue;
+
+                if (method_exists(new $item->controller, $item->action)) {
+                    if (!is_null($item->middleware)) {
+                        Route::{$item->method}($item->route, "{$item->controller}@{$item->action}")->middleware($item->middleware);
+                    } else {
+                        Route::{$item->method}($item->route, "{$item->controller}@{$item->action}");
+                    }
                 }
             }
         } else {

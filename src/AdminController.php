@@ -95,6 +95,14 @@ class AdminController extends Controller
                     'hidden' => null,
                     'inline_edit' => ['type' => DataProvider::STRING, 'data' => null]
                 ],
+                'middleware' => [
+                    'alias' => 'Middleware',
+                    'filter' => DataProvider::STRING,
+                    'format' => null,
+                    'validation_rule' => null,
+                    'hidden' => null,
+                    'inline_edit' => ['type' => DataProvider::STRING, 'data' => null]
+                ],
                 'visible' => [
                     'alias' => 'Видимость',
                     'filter' => null,
