@@ -4,83 +4,123 @@ namespace DarthShelL\Admin;
 
 use App\Http\Controllers\Controller;
 use DarthShelL\Grid\DataProvider;
+use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
     public function index()
     {
-
-        $provider = new DataProvider(new AdminItem());
-
-        $provider->perPage = 10;
-
-        $provider->setAlias([
-            'id' => 'ID'
-        ]);
-
-        $provider->hideColumn('created_at', 'updated_at');
-        $provider->addFilter('id', DataProvider::INTEGER);
-        $provider->addFilter('label', DataProvider::STRING);
-
-        $provider->addFormat('parent', function ($row) {
-            $m = AdminItem::find($row->parent);
-            return is_null($m)?'-':$m->label;
-        });
-        $provider->addFormat('type', function ($row) {
-            $types = [
-                0 => 'dropdown',
-                1 => 'link'
-            ];
-            return $types[$row->type];
-        });
-        $provider->addFormat('visible', function ($row) {
-            $v = [
-                0 => 'No',
-                1 => 'Yes'
-            ];
-            return $v[$row->visible];
-        });
-
-        $provider->enableInlineEditing('label', DataProvider::STRING);
-
-        $dropdowns = AdminItem::query()->where(['type'=>0])->get();
-        $data = [];
-        foreach ($dropdowns as $dd) {
-            $data[$dd->id] = $dd->label;
+        $parents_list = [];
+        foreach (AdminItem::query()->where(['type' => 0])->get() as $parent) {
+            $parents_list[$parent->id] = $parent->label;
         }
-        $provider->enableInlineEditing('parent', DataProvider::ENUM, $data);
 
-        $types = [
-            0 => 'dropdown',
-            1 => 'link'
+        $methods_list = ['get', 'post', 'put', 'delete', 'options', 'patch'];
+        $methods = array_combine($methods_list, $methods_list);
+
+        $_c = Helper::getControllers();
+        $controllers = array_combine($_c, $_c);
+
+        $setup = [
+            'rows_per_page' => 15,
+            'pages_in_paginator' => 2,
+            'actions_column' => ['name' => ''],
+            'row_adding_enabled' => true,
+            'columns' => [
+                'label' => [
+                    'alias' => 'Пункт меню',
+                    'filter' => DataProvider::STRING,
+                    'format' => null,
+                    'validation_rule' => 'required|unique:admin_items',
+                    'hidden' => null,
+                    'inline_edit' => ['type' => DataProvider::STRING, 'data' => null]
+                ],
+                'parent' => [
+                    'alias' => 'Родитель',
+                    'filter' => DataProvider::INTEGER,
+                    'format' => function ($row) {
+                        $m = AdminItem::find($row->parent);
+                        return is_null($m) ? '-' : $m->label;
+                    },
+                    'validation_rule' => 'exists:admin_items,id',
+                    'hidden' => null,
+                    'inline_edit' => ['type' => DataProvider::ENUM, 'data' => $parents_list]
+                ],
+                'type' => [
+                    'alias' => 'Тип',
+                    'filter' => null,
+                    'format' => function ($row) {
+                        $types = [0 => 'dropdown', 1 => 'link'];
+                        return $types[$row->type];
+                    },
+                    'validation_rule' => [
+                        'required',
+                        Rule::in([0, 1]),
+                    ],
+                    'hidden' => null,
+                    'inline_edit' => ['type' => DataProvider::ENUM, 'data' => [0 => 'dropdown', 1 => 'link']]
+                ],
+                'method' => [
+                    'alias' => 'HTTP метод',
+                    'filter' => DataProvider::STRING,
+                    'format' => null,
+                    'validation_rule' => [
+                        'required',
+                        Rule::in($methods_list),
+                    ],
+                    'hidden' => null,
+                    'inline_edit' => ['type' => DataProvider::ENUM, 'data' => $methods]
+                ],
+                'route' => [
+                    'alias' => 'Путь',
+                    'filter' => DataProvider::STRING,
+                    'format' => null,
+                    'validation_rule' => 'required|unique:admin_items',
+                    'hidden' => null,
+                    'inline_edit' => ['type' => DataProvider::STRING, 'data' => null]
+                ],
+                'controller' => [
+                    'alias' => 'Контроллер',
+                    'filter' => DataProvider::STRING,
+                    'format' => null,
+                    'validation_rule' => 'required',
+                    'hidden' => null,
+                    'inline_edit' => ['type' => DataProvider::ENUM, 'data' => $controllers]
+                ],
+                'action' => [
+                    'alias' => 'Метод контроллера',
+                    'filter' => DataProvider::STRING,
+                    'format' => null,
+                    'validation_rule' => 'required',
+                    'hidden' => null,
+                    'inline_edit' => ['type' => DataProvider::STRING, 'data' => null]
+                ],
+                'middleware' => [
+                    'alias' => 'Middleware',
+                    'filter' => DataProvider::STRING,
+                    'format' => null,
+                    'validation_rule' => null,
+                    'hidden' => null,
+                    'inline_edit' => ['type' => DataProvider::STRING, 'data' => null]
+                ],
+                'visible' => [
+                    'alias' => 'Видимость',
+                    'filter' => null,
+                    'format' => function ($row) {
+                        $v = [
+                            0 => 'Нет',
+                            1 => 'Да'
+                        ];
+                        return $v[$row->visible];
+                    },
+                    'validation_rule' => null,
+                    'hidden' => null,
+                    'inline_edit' => ['type' => DataProvider::ENUM, 'data' => [0 => 'Нет', 1 => 'Да']]
+                ],
+            ]
         ];
-        $provider->enableInlineEditing('type', DataProvider::ENUM, $types);
 
-        $data = [];
-        $methods = ['get', 'post', 'put', 'delete', 'options', 'patch'];
-        foreach ($methods as $m) {
-            $data[$m] = $m;
-        }
-        $provider->enableInlineEditing('method', DataProvider::ENUM, $data);
-        $provider->enableInlineEditing('route', DataProvider::INTEGER);
-
-        $data = [];
-//        $data = ['DarthShelL\Admin\AdminController' => 'DarthShelL\Admin\AdminController'];
-        $controllers = Helper::getControllers();
-        foreach ($controllers as $controller) {
-            $data[$controller] = $controller;
-        }
-        $provider->enableInlineEditing('controller', DataProvider::ENUM, $data);
-        $provider->enableInlineEditing('action', DataProvider::STRING);
-
-        $v = [
-            0 => 'No',
-            1 => 'Yes'
-        ];
-        $provider->enableInlineEditing('visible', DataProvider::ENUM, $v);
-        $data = ['DarthShelL\Admin\AdminController' => 'DarthShelL\Admin\AdminController'];
-
-        $provider->processUpdate();
+        $provider = new DataProvider(new AdminItem(), $setup);
 
         return view('admin.index', compact('provider'));
     }
