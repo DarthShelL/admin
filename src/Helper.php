@@ -4,6 +4,8 @@
 namespace DarthShelL\Admin;
 
 
+use Illuminate\Support\Facades\Route;
+
 class Helper
 {
     private static $menu_handler;
@@ -114,5 +116,14 @@ class Helper
         return false;
     }
 
+    public static function routeURIExists($uri): bool
+    {
+        foreach (Route::getRoutes()->getRoutes() as $route) {
+            if ($route->uri == $uri) {
+                return true;
+            }
+        }
 
+        return false;
+    }
 }

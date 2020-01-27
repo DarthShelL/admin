@@ -80,7 +80,7 @@ class Menu
 
                 if (isset($item->sub_items) && count($item->sub_items) > 0) {
                     foreach ($item->sub_items as $sub) {
-                        if ($sub->model->route == '/' . $current_uri) {
+                        if ($sub->model->route == $current_uri) {
                             $_item['active'] = true;
                         }
                     }
@@ -93,7 +93,7 @@ class Menu
                 $_item = [
                     'name' => $item->model->label,
                     'href' => $item->model->route,
-                    'active' => $item->model->route == '/' . $current_uri ? true : false
+                    'active' => $item->model->route == $current_uri ? true : false
                 ];
 
                 return view(self::$templates[self::$ITEM_LINK], $_item)->render();
